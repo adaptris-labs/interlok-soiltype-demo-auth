@@ -7,7 +7,7 @@
 version: '3'
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql/mysql-server:5.6
     container_name: soiltype_auth_mysql
     hostname: soiltype_auth_mysql.local
     environment:
