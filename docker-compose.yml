@@ -1,0 +1,43 @@
+#
+# Not that http://localhost:8080/swagger may give you an error, because it's hard-coded to query localhost:8080/contacts/swagger
+# Basically using docker-toolbox + windows7 means you're going for a non-localhost URL.
+# You'll need to wait awhile as well for mysql to come up
+# Check the DB has been created using the mysql console
+# docker exec -it soiltype_auth_mysql mysql -uroot -ppassword
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: soiltype_auth_mysql
+    hostname: soiltype_auth_mysql.local
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: soiltype_auth
+      MYSQL_USER: soiltype_auth
+      MYSQL_PASSWORD: soiltype_auth
+    ports:
+      - '3306:3306'
+    # Mount and execute our SQL files.
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+
+  interlok:
+    image: lewinc/interlok-soiltype-demo:latest
+    container_name: soiltype_auth
+    hostname: soiltype_auth.local
+    volumes:
+      - ./config/adapter.xml:/opt/interlok/config/adapter.xml
+      - ./config/variables.properties:/opt/interlok/config/variables.properties
+    environment:
+      JVM_ARGS: -Xmx1G
+      # Windows 7/docker-toolbox; you probably want to change from localhost:8080 to 192.168.99.100:8080 or similar.
+      # So that the swagger file returned back to you is "testable" in the local swagger deployment.
+      JAVA_OPTS: -Dinterlok.db.url=jdbc:mysql://mysql:3306/soiltype_auth -Dinterlok.db.user=soiltype_auth -Dinterlok.db.password=soiltype_auth -Dinterlok.api.host=localhost:8080
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+    links:
+      - mysql:mysql
+
+
