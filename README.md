@@ -7,3 +7,7 @@ The https://github.com/quotidian-ennui/interlok-soiltype-demo but with added aut
 * Bad username + password returns a 403
 
 __Might take a while to start up with some errors logged; just be patient!__
+
+## Virtualbox / docker toolbox notes
+
+- You will probably need to explicitly mount a shared folder into the docker `default` machine before the volume mounts work.
