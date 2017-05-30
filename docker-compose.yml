@@ -26,8 +26,7 @@ services:
     container_name: soiltype_auth
     hostname: soiltype_auth.local
     volumes:
-      - ./config/adapter.xml:/opt/interlok/config/adapter.xml
-      - ./config/variables.properties:/opt/interlok/config/variables.properties
+      - ./config:/opt/interlok/config
     environment:
       JVM_ARGS: -Xmx1G
       # Windows 7/docker-toolbox; you probably want to change from localhost:8080 to 192.168.99.100:8080 or similar.
