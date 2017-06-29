@@ -6,7 +6,15 @@ The https://github.com/quotidian-ennui/interlok-soiltype-demo but with added aut
 * No Authorization header returns a 403
 * Bad username + password returns a 403
 
+## Build and run
+
+* ```docker-compose up```
+
 __Might take a while to start up with some errors logged; just be patient!__
+
+A few things to be aware of
+* Because it's docker; the UI might take a bit longer to start and there may be complaints from c3p0. This is something to do with the derby driver taking a while to create the database + flyway action.
+
 
 ## Virtualbox / docker toolbox notes
 
