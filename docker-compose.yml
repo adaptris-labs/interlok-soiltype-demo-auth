@@ -22,11 +22,15 @@ services:
       - ./sql:/docker-entrypoint-initdb.d
 
   interlok:
-    image: lewinc/interlok-soiltype-demo:latest
+    #
+    # If you just want to mount the config then of course, you can...
+    # image: lewinc/interlok-soiltype-demo:latest
+    image: lewinc/interlok-soiltype-demo-auth:latest
     container_name: soiltype_auth
     hostname: soiltype_auth.local
-    volumes:
-      - ./config:/opt/interlok/config
+    # If you're going to mount; then ./config has to contain everything, e.g. log4j2.xml / jetty.xml / webdefault.xml
+    # volumes:
+    #   - ./config:/opt/interlok/config
     environment:
       JVM_ARGS: -Xmx1G
       # Windows 7/docker-toolbox; you probably want to change from localhost:8080 to 192.168.99.100:8080 or similar.
@@ -38,5 +42,4 @@ services:
       - mysql
     links:
       - mysql:mysql
-
 
