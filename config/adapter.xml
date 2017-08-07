@@ -14,6 +14,14 @@
       <jetty-embedded-connection>
         <unique-id>jetty-connection</unique-id>
       </jetty-embedded-connection>
+      <cache-connection>
+        <unique-id>soil-type-cache</unique-id>
+        <cache-instance class="default-ehcache">
+          <cache-name>SoilTypeCache</cache-name>
+          <eviction-policy>LRU</eviction-policy>
+          <max-elements-in-memory>10</max-elements-in-memory>
+        </cache-instance>
+      </cache-connection>
     </connections>
   </shared-components>
   <heartbeat-event-interval>
@@ -23,29 +31,20 @@
   <message-error-handler class="standard-processing-exception-handler">
     <processing-exception-service class="service-list">
       <services>
+        <exception-report-service>
+          <exception-serializer class="exception-as-json-with-stacktrace"/>
+        </exception-report-service>
         <embedded-scripting-service>
           <language>javascript</language>
           <script>
             <![CDATA[
                     var objectHeaders = message.getObjectHeaders();
-
-                    message.addMetadata('httpError', '500');
-                    var exceptionReport = new java.util.HashMap();
-                    exceptionReport.put("workflow", message.getMetadataValue("workflowId"));
-                    var exception = objectHeaders["java.lang.Exception"];
-                    if(exception != null) {
-                      exceptionReport.put("exception", exception);
-                      exceptionReport.put("exceptionMessage", exception.getMessage());
-                    }
                     var exceptionLocation = objectHeaders["java.lang.Exception_Cause"];
                     if(exceptionLocation != null) {
                       if (exceptionLocation == "VerifyIdentityService(VerifyUsernamePassword)" || exceptionLocation == "ValidateMetadataService(CheckAuthHeader)") {
                         message.addMetadata('httpError', '403');
                       }
-                      exceptionReport.put("exceptionLocation", exceptionLocation);
                     }
-                    message.setContent(new com.fasterxml.jackson.databind.ObjectMapper().writer(new com.fasterxml.jackson.core.util.DefaultPrettyPrinter()).writeValueAsString(exceptionReport), "UTF-8");
-
                   ]]>
           </script>
         </embedded-scripting-service>
@@ -140,6 +139,7 @@
                 <unique-id>CheckAuthHeader</unique-id>
                 <required-key>Authorization</required-key>
               </validate-metadata-service>
+
               <!-- Let's unpick the Auth header
                    We know it comes in as "Basic base64(username:password)"
                 -->
@@ -215,6 +215,13 @@
                   </metadata-map>
                 </verifier>
               </verify-identity-service>
+              <trim-metadata-service>
+                <metadata-key-regexp>^(lat|lon)$</metadata-key-regexp>
+              </trim-metadata-service>
+              <validate-metadata-service>
+                <required-key>lat</required-key>
+                <required-key>lon</required-key>
+              </validate-metadata-service>
               <!-- Now we can carry on -->
               <add-formatted-metadata-service>
                 <unique-id>GenerateURL</unique-id>
@@ -235,11 +242,9 @@
                 <services>
                   <check-cache>
                     <unique-id>checkCache</unique-id>
-                    <cache class="default-ehcache">
-                      <cache-name>SoilTypeCache</cache-name>
-                      <eviction-policy>LRU</eviction-policy>
-                      <max-elements-in-memory>10</max-elements-in-memory>
-                    </cache>
+                    <connection class="shared-connection">
+                      <lookup-name>soil-type-cache</lookup-name>
+                    </connection>
                     <cache-entry-evaluator>
                       <key-translator class="metadata-cache-value-translator">
                         <metadata-key>soilTypeKey</metadata-key>
@@ -273,11 +278,9 @@
                       </standalone-requestor>
                       <!-- Add to the cache -->
                       <add-to-cache>
-                        <cache class="default-ehcache">
-                          <cache-name>SoilTypeCache</cache-name>
-                          <eviction-policy>LRU</eviction-policy>
-                          <max-elements-in-memory>10</max-elements-in-memory>
-                        </cache>
+                        <connection class="shared-connection">
+                          <lookup-name>soil-type-cache</lookup-name>
+                        </connection>
                         <cache-entry-evaluator>
                           <key-translator class="metadata-cache-value-translator">
                             <metadata-key>soilTypeKey</metadata-key>
@@ -307,11 +310,9 @@
                       </add-metadata-service>
                       <!-- Get it from the cache -->
                       <retrieve-from-cache>
-                        <cache class="default-ehcache">
-                          <cache-name>SoilTypeCache</cache-name>
-                          <eviction-policy>LRU</eviction-policy>
-                          <max-elements-in-memory>10</max-elements-in-memory>
-                        </cache>
+                        <connection class="shared-connection">
+                          <lookup-name>soil-type-cache</lookup-name>
+                        </connection>
                         <cache-entry-evaluator>
                           <key-translator class="metadata-cache-value-translator">
                             <metadata-key>soilTypeKey</metadata-key>
