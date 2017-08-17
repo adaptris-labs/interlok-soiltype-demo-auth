@@ -1,4 +1,4 @@
-# interlok-soiltype-demo-auth
+# interlok-soiltype-demo-auth [![Docker Build Status](https://img.shields.io/docker/build/lewinc/interlok-soiltype-demo-auth.svg)](https://hub.docker.com/r/mcwarman/nterlok-soiltype-demo-auth/)
 
 The https://github.com/quotidian-ennui/interlok-soiltype-demo but with added authentication based on a database table.
 
