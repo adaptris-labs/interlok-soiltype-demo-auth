@@ -4,4 +4,4 @@ EXPOSE 8080
 
 ADD config /opt/interlok/config
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint-memorydb.sh"]

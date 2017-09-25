@@ -24,8 +24,8 @@ services:
   interlok:
     #
     # If you just want to mount the config then of course, you can...
-    # image: lewinc/interlok-soiltype-demo:latest
-    image: lewinc/interlok-soiltype-demo-auth:latest
+    image: lewinc/interlok-soiltype-demo:latest
+    # image: lewinc/interlok-soiltype-demo-auth:latest
     container_name: soiltype_auth
     hostname: soiltype_auth.local
     # If you're going to mount; then ./config has to contain everything, e.g. log4j2.xml / jetty.xml / webdefault.xml
