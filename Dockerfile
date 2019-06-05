@@ -1,4 +1,4 @@
-FROM lewinc/interlok-soiltype-demo:latest
+FROM adaptrislabs/interlok-soiltype-demo:latest
 
 EXPOSE 8080
 
