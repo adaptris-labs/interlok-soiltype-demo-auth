@@ -24,7 +24,7 @@ services:
   interlok:
     #
     # If you just want to mount the config then of course, you can...
-    image: lewinc/interlok-soiltype-demo:latest
+    image: adaptrislabs/interlok-soiltype-demo:latest
     # image: lewinc/interlok-soiltype-demo-auth:latest
     container_name: soiltype_auth
     hostname: soiltype_auth.local
