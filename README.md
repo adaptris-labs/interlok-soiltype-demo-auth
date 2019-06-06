@@ -1,4 +1,4 @@
-# interlok-soiltype-demo-auth [![Docker Build Status](https://img.shields.io/docker/build/adaptrislabs/interlok-soiltype-demo-auth.svg)](https://hub.docker.com/r/adaptrislabs/nterlok-soiltype-demo-auth/)
+# interlok-soiltype-demo-auth [![Docker Build Status](https://img.shields.io/docker/cloud/build/adaptrislabs/interlok-soiltype-demo-auth.svg)](https://hub.docker.com/r/adaptrislabs/nterlok-soiltype-demo-auth/)
 
 The https://github.com/adaptris-labs/interlok-soiltype-demo but with added authentication based on a database table.
 
