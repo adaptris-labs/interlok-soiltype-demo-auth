@@ -19,22 +19,16 @@ services:
       - '3306:3306'
     # Mount and execute our SQL files.
     volumes:
-      - ./sql:/docker-entrypoint-initdb.d
+      - ./src/main/sql:/docker-entrypoint-initdb.d
 
   interlok:
     #
     # If you just want to mount the config then of course, you can...
     image: adaptrislabs/interlok-soiltype-demo:latest
-    # image: lewinc/interlok-soiltype-demo-auth:latest
     container_name: soiltype_auth
     hostname: soiltype_auth.local
-    # If you're going to mount; then ./config has to contain everything, e.g. log4j2.xml / jetty.xml / webdefault.xml
-    # volumes:
-    #   - ./config:/opt/interlok/config
     environment:
       JVM_ARGS: -Xmx1G
-      # Windows 7/docker-toolbox; you probably want to change from localhost:8080 to 192.168.99.100:8080 or similar.
-      # So that the swagger file returned back to you is "testable" in the local swagger deployment.
       JAVA_OPTS: -Dinterlok.db.url=jdbc:mysql://mysql:3306/soiltype_auth -Dinterlok.db.user=soiltype_auth -Dinterlok.db.password=soiltype_auth -Dinterlok.api.host=localhost:8080
     ports:
       - '8080:8080'
@@ -42,4 +36,3 @@ services:
       - mysql
     links:
       - mysql:mysql
-
