@@ -1,3 +1,4 @@
-config/webdefault.xml
-config/jetty.xml
-config/log4j2.xml
+build
+.gradle
+gradle.properties
+interlokuidb.properties
